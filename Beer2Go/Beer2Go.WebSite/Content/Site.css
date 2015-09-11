@@ -1,0 +1,147 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+@media all and (max-width: 1200px) { /* screen size until 1200px */
+    h5 {
+        font-size: 1.2em; /* 1.2x default size */
+        }
+    h4 {
+        font-size: 1.5em; /* 1.2x default size */
+        }
+    h3 {
+        font-size: 2.0em; /* 1.2x default size */
+        }
+    h2 {
+        font-size: 2.3em; /* 1.2x default size */
+        }
+    h1 {
+        font-size: 2.8em; /* 1.2x default size */
+        }
+    p {
+        font-size: 1.0em; /* 1.2x default size */
+        }
+}
+@media all and (max-width: 1000px) { /* screen size until 1000px */
+    h5 {
+        font-size: 0.8em; /* 1.2x default size */
+        }
+    h4 {
+        font-size: 1.0em; /* 1.2x default size */
+        }
+    h3 {
+        font-size: 1.1em; /* 1.2x default size */
+        }
+    h2 {
+        font-size: 1.5em; /* 1.2x default size */
+        }
+    h1 {
+        font-size: 2.0em; /* 1.2x default size */
+        }
+    p {
+        font-size: 0.6em; /* 1.2x default size */
+        }
+    }
+@media all and (max-width: 500px) { /* screen size until 500px */
+    h5 {
+        font-size: 0.8em; /* 1.2x default size */
+        }
+    h4 {
+        font-size: 0.9em; /* 1.2x default size */
+        }
+    h3 {
+        font-size: 1.0em; /* 1.2x default size */
+        }
+    h2 {
+        font-size: 1.4em; /* 1.2x default size */
+        }
+    h1 {
+        font-size: 1.8em; /* 1.2x default size */
+        }
+    p {
+        font-size: 0.6em; /* 1.2x default size */
+        }
+}
+
+/* Navbar Settings */
+.navbar { 
+    background-color: red !important;
+    color: white !important;
+}
+.nav a{
+    color: whitesmoke !important;
+    text-shadow: 2px 2px 2px black;
+}
+.navbar{
+    border-color: white !important;
+}
+
+.navbar-brand{
+    color: whitesmoke !important;
+    text-shadow: 2px 2px 2px black;
+}
+a {
+    color: whitesmoke !important;
+    text-shadow: 2px 2px 2px black;
+}
+
+a:hover { 
+    color: white !important;
+    text-shadow: 4px 4px 4px black; 
+}
+.navbar button{
+    background-color: red !important;
+    border-color: whitesmoke !important;
+    box-shadow: 2px 2px 2px black;
+}
+.navbar button:hover{
+    border-color: white !important;
+    text-shadow: 1px 1px 1px black; 
+}
+
+/* Body Content*/
+.btn{
+    color: whitesmoke !important;
+    background-color: red !important;
+    border-color: red !important;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+.btn:hover{
+    color: white !important;
+    border-color: white !important;
+}
+
+.jumbotron {
+    text-align: center;
+    /*background-color: white !important;*/
+}
+
+input[type=text],[type=search] {
+    border-radius: 5px;
+    padding: 7px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.smokeyoutline {
+    background-color: white;
+    border-radius: 7px;
+    box-shadow: 0px 0px 2px 2px lightgrey;
+}
+
+.test {
+    border: 1px solid black;
+}
+
+/* Footer*/
+footer {
+    color: red;
+}

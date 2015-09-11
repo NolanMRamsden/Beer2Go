@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "Beers";
+}
+<style>
+    .productContainer {
+        margin-top: 15px;
+    }
+
+    .cartButton {
+        width: 100%;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        margin-bottom: 5px;
+    }
+    .quickButton {
+        padding-top: 3px;
+        padding-bottom: 3px;
+        width: 100%;
+    }
+
+    .beer {
+        margin-top: 10px;
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+    .beerCell {
+        padding: 10px;
+    }
+    .beerImage {
+        max-height: 90px;
+        min-height: 50px;
+        min-width: 50px;
+    }
+    .topSection {
+        padding-top: 10px;
+    }
+</style>
+
+@Scripts.Render("~/bundles/beers")
+<div ng-app="Beer2Go.Beers" ng-controller="BeersController">
+    <div class="row" style="height: 100%">
+        <div class="col-lg-6 topSection">
+            <div class="smokeyoutline" style="margin: 5px;">
+                @Html.Partial("~/Views/Partials/Location.cshtml")
+            </div>
+        </div>
+        <div class="col-lg-6 topSection" style="height: 100%">
+            <div class="smokeyoutline" style="margin: 5px;">
+                @Html.Partial("~/Views/Partials/Filters.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="productContainer">
+        <div class="beer smokeyoutline" ng-repeat="product in VisibleProducts">
+            <table style="height: 100%; vertical-align: middle; width: 100%">
+                <tr>
+                    <td class="beerCell" style="width: 15%">
+                        <img class="beerImage img-responsive" src="https://www.hallaminternet.com/assets/URL-tagging-image.png" />
+                    </td>
+                    <td class="beerCell" style="width: 65%;" align="left">
+                        <h3 style="margin-top: 0px;">{{product.Name}} ({{product.UnitQuantity}})</h3>
+                        <h4 style="display: inline"><span class="hidden-xs">Price: </span>${{product.SalePrice}}</h4>
+                        <p style="display: inline" ng-show="{{product.UnitQuantity > 1}}"> - (${{(product.SalePrice/product.UnitQuantity).toFixed(2)}} each.)</p>
+                    </td>
+                    <td class="beerCell" style="width: 20%">
+                        <button class="btn cartButton buttonMargin" ng-click="" ng-disabled="" ng-show="{{product.Inventory > 0}}">
+                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                            <span class="hidden-xs">Add To </span>
+                            <span class="hidden-xs">Cart</span>
+                        </button>
+                        <button class="btn quickButton buttonMargin" ng-click="" ng-disabled="" ng-show="{{product.Inventory > 0}}">
+                            <span class="glyphicon glyphicon-flash"></span>
+                            <span class="hidden-xs">Quick</span>
+                            <span class="hidden-xs">Order</span>
+                        </button>
+                        <h4 style="color: red; text-align: center" ng-show="{{product.Inventory <= 0}}">OUT OF<br /> STOCK</h4>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div ng-show="VisibleProducts.length == 0" class="alert-danger alert" style="margin-left:3px;margin-right:3px;" role="alert" ng-cloak>
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            No Products Match Your Search Criteria
+        </div>
+        <div ng-show="{{VisibleProducts === undefined}}" class="alert-danger alert" style="margin-left:3px;margin-right:3px;" role="alert" ng-cloak>
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            Error Retrieving Products
+        </div>
+    </div>
+</div>

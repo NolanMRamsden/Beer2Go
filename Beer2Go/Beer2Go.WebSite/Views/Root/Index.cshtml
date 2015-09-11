@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Beer2Go";
+}
+
+@Scripts.Render("~/bundles/index")
+<div class="row" ng-app="Beer2Go.Index" ng-controller="IndexController" style="text-align: center">
+    <div class="col-md-6" style="margin-top: 10px;">
+        <div class="deliveryFeeHolder smokeyoutline" style="padding: 5px;">
+            <div class="">
+                <h2>Delivery Fees</h2>
+                <h4>Let us know where you are and we'll tell you how much</h4>
+                <div>
+                    @Html.Partial("~/Views/Partials/Location.cshtml")
+                </div>
+                <div style="margin: 5px; overflow: auto">
+                    <div style="float: left; width: 49%;text-align: center" class="smokeyoutline">
+                        <h1>$&nbsp;{{DeliveryPrice}}</h1>
+                    </div>
+                    <div style="float: right; width: 49%;text-align: center" class="smokeyoutline">
+                        <h1>{{DeliveryDistance}}&nbsp;km</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6" style="margin-top: 10px;">
+        <div class="deliveryFeeHolder smokeyoutline" style="padding: 5px;">
+            <div class="">
+                <h2>Thirsty</h2>
+                <h4>Start shopping our assortment of beers, wines and spirits</h4>
+                <div class="btn-group">
+                    <a class="btn btn-lg">a</a>
+                    <a class="btn btn-lg">a</a>
+                    <a class="btn btn-lg">a</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

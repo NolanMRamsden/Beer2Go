@@ -1,0 +1,239 @@
+﻿<style>
+    .locationSection {
+        height: 100%;
+    }
+    .locationCell{
+        padding:3px;
+    }
+    .buttonHolder {
+        width:18%;
+    }
+    .inputHolder {
+        width:64%;
+    }
+    .locationButton {
+        width:100%;
+        height:100%;
+    }
+    .lookupButton {
+        width:100%;
+        height:100%;
+    }
+    .enterLocation {
+        width:100%;
+    }
+    .target {
+        color: white;
+    }
+    .search {
+        color: white;
+    }
+</style>
+
+<form class="locationSection" ng-controller="locationController">
+    <table style="width: 100%">
+        <tr>
+            <td class="inputHolder locationCell">
+                <input type="text" class="enterLocation" placeholder="Enter Address Or Locate" ng-model="Location.Text" ng-disabled="Location.Looking" />
+            </td>
+            <td class="buttonHolder locationCell">
+                <button class="btn lookupButton" type="submit" ng-click="SearchForLocation()" data-loading-text="Searching..."  ng-disabled="Location.Looking || Location.Text === ''">
+                    <span class="glyphicon glyphicon-search search"></span>
+                    <span class="hidden-sm hidden-xs">Enter</span>
+                    <span class="hidden-xs">Location</span>
+                </button>
+            </td>
+            <td class="buttonHolder locationCell">
+                <button class="btn locationButton" ng-click="UseCurrentLocation()" data-loading-text="Locating..." ng-disabled="Location.Looking">
+                    <span class="glyphicon glyphicon-screenshot target"></span>
+                    <span class="hidden-sm hidden-xs">Use </span>
+                    <span class="hidden-xs">My Location</span>
+                </button>
+            </td>
+        </tr>
+    </table>
+    <div class="alert alert-success alert-dismissible fade in" role="alert" ng-show="Location.Found" ng-cloak style="margin: 3px;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Success:</span>
+        {{Location.Message}}
+    </div>
+    <div class="alert alert-warning alert-dismissible fade in" role="alert" ng-show="Location.Looking" ng-cloak style="margin: 3px;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Searching:</span>
+        {{Location.Message}}
+    </div>
+    <div class="alert alert-danger alert-dismissible fade in" role="alert" ng-show="Location.NotFound" ng-cloak style="margin: 3px;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{Location.Message}}
+    </div>
+</form>
+
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+    app.controller('locationController', function ($scope, $http) {
+        $scope.SearchForLocation = function () {
+            $scope.SetMessage('Looking up location..', 'warning');
+            TranslateTextToLatLong($scope.Location.Text, function (result) {
+                $scope.Location.Lat = result.Lat;
+                $scope.Location.Long = result.Long;
+                if (result.Status === true) {
+                    $scope.SetMessage('Successfully located', 'success');
+                    $scope.$apply();
+                    SetLocationCookie();
+                } else {
+                    $scope.Location = {};
+                    $scope.SetMessage("Unable to locate you", "error");
+                    $scope.$apply();
+                }
+            });
+        }
+
+        $scope.UseCurrentLocation = function () {
+            $scope.SetMessage('Trying to locate you..', 'warning')
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(LoadPosition, LocationError); 
+            } else {
+                $scope.Location = {};
+                $scope.SetLocation($scope.Location);
+                SetMessage('Permission denied', 'error');
+            }
+
+        }
+
+        function LoadPosition(position, callback) {
+            $scope.Location.Lat = position.coords.latitude;
+            $scope.Location.Long = position.coords.longitude;
+            TranslateLatLongToText($scope.Location.Lat, $scope.Location.Long, function (result) {
+                if (result.Status === true) {
+                    $scope.Location.Text = result.Text;
+                    $scope.SetMessage("Successfully located", "success");
+                    $scope.$apply();
+                    SetLocationCookie();
+                } else {
+                    $scope.SetMessage("Unable to locate you", "error");
+                    $scope.$apply();
+                }
+            });
+        }
+
+        $scope.SetMessage = function(message, type) {
+            $scope.Location.Looking = false;
+            $scope.Location.NotFound = false;
+            $scope.Location.Found = false;
+            if (type === 'error') {
+                $scope.Location.NotFound = true;
+            } else if (type === 'warning') {
+                $scope.Location.Looking = true;
+            } else if (type === 'success') {
+                $scope.Location.Found = true;
+            }
+            $scope.Location.Message = message;
+        }
+
+        function LocationError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    $scope.SetMessage("Request for Geolocation denied.", 'error');
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    $scope.SetMessage("Location information is unavailable.", 'error');
+                    break;
+                case error.TIMEOUT:
+                    $scope.SetMessage("The request to get your location timed out.", 'error');
+                    break;
+                case error.UNKNOWN_ERROR:
+                    $scope.SetMessage("An unknown error occurred.", 'error');
+                    break;
+                default:
+                    $scope.SetMessage("An unknown error occurred.", 'error');
+            }
+        }
+
+        function TranslateLatLongToText(lat, long, callback) {
+            var geocoder = new google.maps.Geocoder();
+            var latlng = { lat: $scope.Location.Lat, lng: $scope.Location.Long };
+            geocoder.geocode({ 'location': latlng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK && results[1]) {
+                    callback({
+                        Text: results[0].address_components[0].short_name + " "
+                            + results[0].address_components[1].short_name + ", "
+                            + results[0].address_components[2].short_name,
+                        Status: true
+                    });
+                } else {
+                    callback({
+                        Text: "",
+                        Status: false
+                    });
+                }
+            });
+        }
+
+        function TranslateTextToLatLong(text, callback) {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': text }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    callback( {
+                        Lat: results[0].geometry.location.lat(),
+                        Long: results[0].geometry.location.lng(),
+                        Status: true
+                    });
+                } else {
+                    callback( {
+                        Lat: 0,
+                        Long: 0,
+                        Status: false
+                    });
+                }
+            });
+        }
+
+        function SetLocationCookie() {
+            setCookie('location_lat', $scope.Location.Lat, 2);
+            setCookie('location_lng', $scope.Location.Long, 2);
+            setCookie('location_txt', $scope.Location.Text, 2);
+            $scope.SetLocation($scope.Location);
+        }
+
+        function LoadLocationCookie() {
+            $scope.Location.Lat = getCookie('location_lat');
+            $scope.Location.Long = getCookie('location_lng');
+            $scope.Location.Text = getCookie('location_txt');
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires + ";path=/;";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return undefined;
+        }
+
+
+        $scope.Location = {};
+        $scope.Location.Lat = "";
+        $scope.Location.Long = "";
+        $scope.Location.Text = "";
+        $scope.Location.Message = "";
+        LoadLocationCookie();
+        if ($scope.Location.Lat && $scope.Location.Long && $scope.Location.Text) {
+            $scope.SetMessage("Successfully located", 'success');
+            $scope.SetLocation($scope.Location);
+        } else {
+            $scope.Location.Found = false;
+        }
+        $scope.Location.NotFound = false;
+        $scope.Location.Looking = false;
+    });
+</script>

@@ -1,0 +1,71 @@
+﻿<style>
+    .filterSection {
+        padding: 5px;
+        height: 100%;
+    }
+    .nameFilter {
+        width: 100%;
+    }
+    .cmn-toggle {
+      position: absolute;
+      margin-left: -9999px;
+      visibility: hidden;
+    }
+    .cmn-toggle + label {
+      position: relative;
+      cursor: pointer;
+      outline: none;
+      user-select: none;
+    }
+    input.cmn-toggle-round + label {
+      padding: 2px;
+      width: 70px;
+      height: 25px;
+      background-color: #dddddd;
+      border-radius: 60px;
+    }
+    input.cmn-toggle-round + label:before,
+    input.cmn-toggle-round + label:after {
+      display: block;
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      bottom: 1px;
+      content: "";
+    }
+    input.cmn-toggle-round + label:before {
+      right: 1px;
+      background-color: #f1f1f1;
+      border-radius: 60px;
+      transition: background 0.4s;
+    }
+    input.cmn-toggle-round + label:after {
+      width: 29px;
+      background-color: #fff;
+      border-radius: 100%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      transition: margin 0.4s;
+    }
+    input.cmn-toggle-round:checked + label:before {
+      background-color: #ff0000;
+    }
+    input.cmn-toggle-round:checked + label:after {
+      margin-left: 48px;
+    }
+    .toggleHolder {
+        margin: 5px;
+    }
+</style>
+
+<form class="filterSection">
+    <input type="search" placeholder="Search For Product" class="nameFilter input" ng-model="textFilter" ng-change="ApplyFilters()" />
+    <div style="overflow: auto" class="toggleHolder">
+        <div style="float:left">
+            <h4>Include out of stock</h4>
+        </div>
+        <div class="switch" style="float:right; margin-right: 15px">
+            <input id="cmn-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox" ng-model="includeOutOfStock" ng-change="ApplyFilters()">
+            <label for="cmn-toggle-1"></label>
+        </div>
+    </div>
+</form>
